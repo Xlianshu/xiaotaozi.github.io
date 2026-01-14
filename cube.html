@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <title>3D 立体正方形</title>
+  <style>
+    body {
+      /* 页面居中显示立方体 */
+      background: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .cube {
+      /* 立方体容器，启用3D效果和初始旋转 */
+      position: relative;
+      width: 100px;
+      height: 100px;
+      transform-style: preserve-3d;
+      transform: rotateX(-30deg) rotateY(30deg);
+      animation: rotate 5s infinite linear;
+    }
+    .face {
+      /* 立方体的每个面 */
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: rgba(0, 150, 255, 0.7);
+      border: 2px solid #fff;
+      box-sizing: border-box;
+    }
+    /* 各个面的3D变换 */
+    .front  { transform: translateZ(50px);}
+    .back   { transform: rotateY(180deg) translateZ(50px);}
+    .right  { transform: rotateY(90deg) translateZ(50px);}
+    .left   { transform: rotateY(-90deg) translateZ(50px);}
+    .top    { transform: rotateX(90deg) translateZ(50px);}
+    .bottom { transform: rotateX(-90deg) translateZ(50px);}
+    /* 立方体旋转动画 */
+    @keyframes rotate {
+      0% { transform: rotateX(-30deg) rotateY(30deg);}
+      100% { transform: rotateX(-30deg) rotateY(390deg);}
+    }
+  </style>
+</head>
+<body>
+  <!-- 立方体结构，每个div代表一个面 -->
+  <div class="cube" id="cube">
+    <div class="face front"></div>
+    <div class="face back"></div>
+    <div class="face right"></div>
+    <div class="face left"></div>
+    <div class="face top"></div>
+    <div class="face bottom"></div>
+  </div>
+  <script>
+    // 获取立方体元素
+    const cube = document.getElementById('cube');
+    let isDragging = false;
+    let lastX = 0, lastY = 0;
+    let rotateX = -30, rotateY = 30;
+
+    // 关闭动画，防止和手动旋转冲突
+    cube.style.animation = 'none';
+
+    // 鼠标按下，开始拖动
+    cube.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    });
+
+    // 鼠标移动，旋转立方体
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      rotateY += dx * 0.5;
+      rotateX -= dy * 0.5;
+      cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    });
+
+    // 鼠标松开，结束拖动
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  </script>
+</body>
+</html>
